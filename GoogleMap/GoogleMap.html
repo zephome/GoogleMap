@@ -24,11 +24,13 @@
 				var displayMarkerInfo = [
 					{
 						"name": "잠실 야구장",
+						"description": "잠실 야구장 설명",
 						"lat": 37.5122579,
 						"lng": 127.0719011
 					},
 					{
 						"name": "잠실 실내 수영장",
+						"description": "잠실 실내 수영장 설명",
 						"lat": 37.514509,
 						"lng": 127.076261
 					}
@@ -55,29 +57,51 @@
 					map.setCenter(center);
 				});
 
-				// 마커 이미지 경로
-				var image = "http://static.naver.com/maps2/icons/pin_spot2.png";
+				// 사용자 마커 이미지 경로 (없는 경우 구글 기본 마커 이미지 사용)
+				// var image = "이미지 경로";
 
-				// 마커 및 말풍선 표시
+				// 마커 및 정보창 표시
+				var infowindow = new google.maps.InfoWindow();	// 마커 생성 전 초기화를 해야지 다중 정보창이 있는경우 이전 정포창이 닫히고 새로운 정보창이 표시됨
+
 				$.each(displayMarkerInfo, function (index, value) {
 					var myLatLng = new google.maps.LatLng(value.lat, value.lng);		// 좌표 설정
 					var marker = new google.maps.Marker({
 						position: myLatLng,		// 좌표
-						map: map,				// 마커를 표시할 element
-						icon: image				// 마커 이미지 경로
+						map: map				// 마커를 표시할 element
+						//icon: image				// 마커 이미지 경로 (사용자 마커 사용 시 추가)
 					});
 
 					// 말풍선 표시
-					var infowindow = new google.maps.InfoWindow({
-						content: value.name
+					var infowindowContent = '<div id="conetnt">' +
+											value.name +
+											'<hr />' +
+											value.description +
+											'</div>';
+
+					// 초기 로드 시 정보창 표시할 경우 주석 삭제
+					//infowindow.open(map, marker);
+
+					// 마커 클릭 시 정보창 표시
+					google.maps.event.addListener(marker, 'click', function () {
+						infowindow.setContent(infowindowContent)
+						infowindow.open(map, this);
 					});
 
-					infowindow.open(map, marker);
+					// 지도 클릭 시 정보창 닫기
+					google.maps.event.addListener(map, 'click', function () {
+						infowindow.close();
+					});
 
-					// 마커 클릭 시 내용 표시
-					google.maps.event.addListener(marker, 'click', function () {
+					// 마커 마우스오버/아웃 시 정보창 표시 (사용 시 주석 삭제)
+					/*google.maps.event.addListener(marker, 'mouseover', function () {
+						infowindow.setContent(infowindowContent)
 						infowindow.open(map, marker);
 					});
+
+					google.maps.event.addListener(marker, 'mouseout', function () {
+						infowindow.setContent(infowindowContent)
+						infowindow.close();
+					});*/
 				});
 			}
 		});
