@@ -7,3 +7,10 @@
 
 ## Google Map API Reference
 URL: https://developers.google.com/maps/documentation/javascript/reference
+
+## 기능
+**GoogleMap.html**
+- 기본적인 GoogleMap 연동
+
+**GoogleMapAutoComplete.html**
+- GoogleMap 장소, 주소 자동완성
